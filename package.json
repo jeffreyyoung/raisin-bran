@@ -1,0 +1,25 @@
+{
+  "name": "cerealer",
+  "version": "1.0.0",
+  "main": "dist/cerealer.cjs.js",
+  "module": "dist/cerealer.esm.js",
+  "browser": "dist/cerealer.umd.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "ava": "^1.0.0-beta.3",
+    "rollup": "^0.57.0",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-node-resolve": "^3.0.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "dev1": "nodemon --watch src --watch test --exec npm test",
+    "test": "ava",
+    "pretest": "npm run build"
+  },
+  "files": [
+    "dist"
+  ]
+}

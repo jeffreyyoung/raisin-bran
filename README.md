@@ -1,0 +1,1 @@
+# Simple javascript serialization deserialization library.  Userful for hydrating graphql responses

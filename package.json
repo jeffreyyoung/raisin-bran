@@ -4,8 +4,7 @@
   "main": "dist/raisin-bran.cjs.js",
   "module": "dist/raisin-bran.esm.js",
   "browser": "dist/raisin-bran.umd.js",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "ava": "^1.0.0-beta.3",
     "rollup": "^0.57.0",

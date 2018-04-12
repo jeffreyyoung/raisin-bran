@@ -9,7 +9,7 @@ test('should serealize primitive', t => {
 	t.is(8, raisinBran.serialize(8, Number));
 });
 
-test('should deserealize primitive', t => {
+test('should deserialize primitive', t => {
 	t.is(false, raisinBran.deserialize(false, Boolean));
 	t.is(true, raisinBran.deserialize(true, Boolean));
 	t.is('hey', raisinBran.deserialize('hey', String));
@@ -71,6 +71,40 @@ test('entity should handle circular dependencies', t => {
 		{ name: 'voldemort', friends: [ { name: 'voldemort' } ] },
 		raisinBran.serialize(voldemort, userEntity)
 	);
-	
-	
 });
+
+test('should handle deeply nested serializables', t => {
+	class User {};
+	const userSerializer = new raisinBran.Serializable();
+	userSerializer.define(
+		{id: String, name: String, friends: [userSerializer]}, //first arg is schema
+		() => new User() //second arg is factory method
+	);
+	
+	const graphqlResponse = {
+		result: {
+			users: [{
+				id: 1,
+				name: 'albus dumbledore',
+				friends: [{
+					id: 2,
+					name: 'harry potter',
+				}],
+			},{
+				id: 3,
+				name: 'hermione granger'
+			}]
+		}
+	};
+	
+	const gqlSchema = {
+		result: {
+			users: [userSerializer]
+		}
+	};
+	
+	const deserialized = raisinBran.deserialize(graphqlResponse, gqlSchema);
+	t.is(true, deserialized.result.users[0] instanceof User);
+	const serialized = raisinBran.serialize(deserialized, gqlSchema);
+
+})

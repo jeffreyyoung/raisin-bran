@@ -4,7 +4,13 @@ I had trouble finding a simple library to convert my graphql responses from json
 * more examples can be seen in test/test.js
 * see src/Entity.js for an example on how to extend Serializable for more customizability
 
-example: ```javascripts
+`npm i --save raisin-bran`
+
+
+example: 
+```javascript
+
+import raisinBran from 'raisin-bran'
 
 class User {};
 

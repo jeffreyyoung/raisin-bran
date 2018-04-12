@@ -9,7 +9,7 @@ I had trouble finding a simple library to convert my graphql responses from json
 
 examples:
 
-with decorate:
+## with decorate:
 ```javascript
 
 import rb from 'raisin-bran'
@@ -53,7 +53,7 @@ const serialized = rb.serialize(deserialized, gqlSchema);
 ```
 
 
-
+## With Serializable
 ```javascript
 
 import raisinBran from 'raisin-bran'
@@ -97,6 +97,22 @@ const deserialized = raisinBran.deserialize(graphqlResponse, gqlSchema);
 console.log(deserialized.result.users[0] instanceof User) //true
 
 const serialized = raisinBran.serialize(deserialized, gqlSchema);
+```
 
+## With Entity
+```javascript
+class User {};
+raisinBran.Entity.decorate(User, {
+  id: String,
+  friends: [User]
+});
 
+const jim = new User();
+jim.id = 'asdf';
+jim.friends = [jim];
+const serialized = raisinBran.serialize(jim);
+t.deepEqual(serialized, {id: 'asdf', friends: [{id: 'asdf'}]});
+const deserialized = raisinBran.deserialize(serialized, User);
+t.is(true, deserialized instanceof User);
+t.is(true, deserialized.friends[0] instanceof User);
 ```

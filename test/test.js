@@ -1,27 +1,27 @@
 const assert = require('assert');
-const cereal = require('..');
+const raisinBran = require('..');
 import test from 'ava';
 
 test('should serealize primitive', t => {
-	t.is(false, cereal.serialize(false, Boolean));
-	t.is(true, cereal.serialize(true, Boolean));
-	t.is('hey', cereal.serialize('hey', String));
-	t.is(8, cereal.serialize(8, Number));
+	t.is(false, raisinBran.serialize(false, Boolean));
+	t.is(true, raisinBran.serialize(true, Boolean));
+	t.is('hey', raisinBran.serialize('hey', String));
+	t.is(8, raisinBran.serialize(8, Number));
 });
 
 test('should deserealize primitive', t => {
-	t.is(false, cereal.deserialize(false, Boolean));
-	t.is(true, cereal.deserialize(true, Boolean));
-	t.is('hey', cereal.deserialize('hey', String));
-	t.is(8, cereal.deserialize(8, Number));
+	t.is(false, raisinBran.deserialize(false, Boolean));
+	t.is(true, raisinBran.deserialize(true, Boolean));
+	t.is('hey', raisinBran.deserialize('hey', String));
+	t.is(8, raisinBran.deserialize(8, Number));
 });
 
 test('should handel raw objects', t => {
-	t.deepEqual({yar: 'meow'}, cereal.serialize({yar: 'meow'}, {}));
+	t.deepEqual({yar: 'meow'}, raisinBran.serialize({yar: 'meow'}, {}));
 });
 
 test('should not serialize extra properties', t => {
-	t.deepEqual({'albus':'dumbledore'}, cereal.serialize({'albus': 'dumbledore', 'luna': 'lovegood'}, {'albus': String}));
+	t.deepEqual({'albus':'dumbledore'}, raisinBran.serialize({'albus': 'dumbledore', 'luna': 'lovegood'}, {'albus': String}));
 });
 
 test('should handle classes', t => {
@@ -34,14 +34,14 @@ test('should handle classes', t => {
 	const ron = new User();
 	ron.id = 'ron';
 	harry.friends.push(ron);
-	const userSerializer = new cereal.Serializable();
+	const userSerializer = new raisinBran.Serializable();
 	userSerializer.factory = () => new User();
 	userSerializer.define({
 		id: String,
 		friends: [userSerializer]
 	});
 
-	const deserialized = cereal.deserialize(harry, userSerializer);
+	const deserialized = raisinBran.deserialize(harry, userSerializer);
 	t.is(true, deserialized instanceof User);
 	t.is(deserialized.id, 'harry');
 	t.is(deserialized.friends[0].id, 'ron');
@@ -52,11 +52,11 @@ test('should handle classes', t => {
 		friends: [{
 			id: 'ron'
 		}]
-	}, cereal.serialize(deserialized, userSerializer));
+	}, raisinBran.serialize(deserialized, userSerializer));
 });
 
 test('entity should handle circular dependencies', t => {
-	const userEntity = new cereal.Entity();
+	const userEntity = new raisinBran.Entity();
 	userEntity.define({
 		name: String,
 		friends: [userEntity]
@@ -69,7 +69,7 @@ test('entity should handle circular dependencies', t => {
 	
 	t.deepEqual(
 		{ name: 'voldemort', friends: [ { name: 'voldemort' } ] },
-		cereal.serialize(voldemort, userEntity)
+		raisinBran.serialize(voldemort, userEntity)
 	);
 	
 	

@@ -1,9 +1,9 @@
 {
-  "name": "cerealer",
+  "name": "raisin-bran",
   "version": "1.0.0",
-  "main": "dist/cerealer.cjs.js",
-  "module": "dist/cerealer.esm.js",
-  "browser": "dist/cerealer.umd.js",
+  "main": "dist/raisin-bran.cjs.js",
+  "module": "dist/raisin-bran.esm.js",
+  "browser": "dist/raisin-bran.umd.js",
   "dependencies": {
   },
   "devDependencies": {

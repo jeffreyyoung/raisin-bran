@@ -1,7 +1,8 @@
 import getType from './getType';
 import makeSerializable from './makeSerializable';
+import makeSerializableLazy from './makeSerializableLazy';
 export default class Serializable {
-  constructor(schema, factory, options) {
+  constructor(schema, options, factory) {
     if (schema) { this.schema = schema;}
     if (factory) { this.factory = factory;}
     if (options) { this.options; }
@@ -13,7 +14,7 @@ export default class Serializable {
     if (options) { this.options = options; }
   }
 
-  factory(context) {
+  factory(context, json) {
     if (this._factory) {return this._factory(context)}
     return {};
   }
@@ -41,6 +42,22 @@ export default class Serializable {
   }
 }
 
-Serializable.decorate = function (clazz, schema, options) {
-  makeSerializable(clazz, new this(schema, () => new clazz(), options));
+Serializable.decorate = function (clazz, schema, options, factory) {
+  const getOptions = () => ({schema, options, factory});
+  this.decorateLazy(clazz, getOptions);
+}
+
+Serializable.decorateLazy = function (clazz, getOptions) {
+  const getSerializable = () => {
+    const options = getOptions();
+    let defaultFactory = () => new clazz();
+    const defaults = {
+      factory: options.factory || defaultFactory,
+      schema: options.schema,
+      options: options.options
+    }
+    return new this(defaults.schema, defaults.options, defaults.factory);
+  }
+  
+  makeSerializableLazy(clazz, getSerializable)
 }

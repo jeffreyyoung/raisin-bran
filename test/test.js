@@ -106,5 +106,21 @@ test('should handle deeply nested serializables', t => {
 	const deserialized = raisinBran.deserialize(graphqlResponse, gqlSchema);
 	t.is(true, deserialized.result.users[0] instanceof User);
 	const serialized = raisinBran.serialize(deserialized, gqlSchema);
+});
 
+test('decorate should work', t => {
+	class User {};
+	raisinBran.Entity.decorate(User, {
+		id: String,
+		friends: [User]
+	});
+
+	const jim = new User();
+	jim.id = 'asdf';
+	jim.friends = [jim];
+	const serialized = raisinBran.serialize(jim);
+	t.deepEqual(serialized, {id: 'asdf', friends: [{id: 'asdf'}]});
+	const deserialized = raisinBran.deserialize(serialized, User);
+	t.is(true, deserialized instanceof User);
+	t.is(true, deserialized.friends[0] instanceof User);
 })

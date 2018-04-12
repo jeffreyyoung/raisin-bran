@@ -7,7 +7,53 @@ I had trouble finding a simple library to convert my graphql responses from json
 `npm i --save raisin-bran`
 
 
-example: 
+examples:
+
+with decorate:
+```javascript
+
+import rb from 'raisin-bran'
+
+class User {};
+
+rb.Serializable.decorate(User, {
+  id: String,
+  friends: [User]
+});
+
+const gqlResponseSchema = {
+  result: {
+    users: [User]
+  }
+};
+
+const graphqlResponse = {
+  result: {
+    users: [{
+      id: 1,
+      name: 'albus dumbledore',
+      friends: [{
+        id: 2,
+        name: 'harry potter',
+      }],
+    },{
+      id: 3,
+      name: 'hermione granger'
+    }]
+  }
+};
+
+
+const deserialized = rb.deserialize(graphqlResponse, gqlSchema);
+
+console.log(deserialized.result.users[0] instanceof User) //true
+
+const serialized = rb.serialize(deserialized, gqlSchema);
+
+```
+
+
+
 ```javascript
 
 import raisinBran from 'raisin-bran'

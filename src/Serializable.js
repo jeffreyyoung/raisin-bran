@@ -1,5 +1,5 @@
 import getType from './getType';
-
+import makeSerializable from './makeSerializable';
 export default class Serializable {
   constructor(schema, factory, options) {
     if (schema) { this.schema = schema;}
@@ -39,4 +39,8 @@ export default class Serializable {
     });
     return m;
   }
+}
+
+Serializable.decorate = function (clazz, schema, options) {
+  makeSerializable(clazz, new this(schema, () => new clazz(), options));
 }

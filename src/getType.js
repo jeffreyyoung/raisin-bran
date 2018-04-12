@@ -2,23 +2,41 @@ import * as types from './types/index';
 import Serializable from './Serializable';
 
 export default function getType(schema) {
+  let serializable;
   if (Array.isArray(schema)) {
-    return types.list(getType(schema[0]))
+    serializable = types.list(getType(schema[0]))
   } else if (Serializable.isPrototypeOf(schema)) {
-    return schema;
+    serializable = schema;
   } else if (schema instanceof Serializable) {
-    return schema;
+    serializable = schema;
+  } else if (getTypeFromConstructor(schema)) {
+    serializable = getTypeFromConstructor(schema);
+  } else if (getTypeFromClass(schema)) {
+    serializable = getTypeFromClass(schema);
   } else if (typeof schema === 'object' && Object.keys(schema).length > 0) {
-    return types.object(schema);
+    serializable = types.object(schema);
   } else if (typeof schema === 'object') {
-    return types.raw(schema);
+    serializable = types.raw(schema);
   } else if (schema === String) {
-    return types.primitive(schema);
+    serializable = types.primitive(schema);
   } else if (schema === Boolean) {
-    return types.primitive(schema);
+    serializable = types.primitive(schema);
   } else if (schema === Number) {
-    return types.primitive(schema);
+    serializable = types.primitive(schema);
   } else {
-    throw 'unknown type'
+    throw 'unknown type for: ' + schema;
+  }
+  return serializable;
+}
+
+export function getTypeFromClass(schema) {
+  if (schema && schema.$serializable) {
+    return schema.$serializable
+  }
+}
+
+export function getTypeFromConstructor(thing) {
+  if (thing && thing.constructor && thing.constructor.$serializable) {
+    return thing.constructor.$serializable;
   }
 }

@@ -16,7 +16,11 @@ class User {};
 
 const userSerializer = new raisinBran.Serializable();
 userSerializer.define(
-  {id: String, name: String, friends: [userSerializer]}, //first arg is schema
+  {
+    id: String,
+    name: String,
+    friends: [userSerializer]
+   }, //first arg is schema
   (context, json) => new User() //second arg is factory method, if we wanted we could do lookups in an entity store so that all users with id: n have the same instance
 );
 

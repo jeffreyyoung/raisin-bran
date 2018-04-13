@@ -19,27 +19,62 @@ export default class Serializable {
     return {};
   }
 
+  beforeSerialize(value, context) {
+    if (this.options.beforeSerialize) {
+      return this.options.beforeSerialize(value, context);
+    }
+    return value;
+  }
+
+  afterSerialize(json, context) {
+    if (this.options.afterSerialize) {
+      return this.options.afterSerialize(json, context);
+    }
+    return json;
+  }
+
   serialize(value, context) {
     if (!value) { return;}
+    value = this.beforeSerialize(value, context);
+    
     let json = {};
     Object.entries(this.schema).forEach(([key, subSchema]) => {
       if (value.hasOwnProperty(key) && json[key] != undefined) {
         json[key] = getType(subSchema).serialize(value[key], context);
       }
     });
+    json = this.afterSerialize(json, context);
     return json;
   }
-
+  
+  beforeDeserialize(json, context) {
+    if (this.options.beforeDeserialize) {
+      return this.options.beforeDeserialize(json, context);
+    }
+    return json;
+  }
+  
+  afterDeserialize(model, context) {
+    if (this.options.afterDeserialize) {
+      return this.options.afterDeserialize(model, context);
+    }
+    return model;
+  }
+  
   deserialize(json, context) {
     if (!json) { return; }
+    json = this.beforeDeserialize(json, context);
     const m = this.factory(context, json);
     Object.entries(this.schema).forEach(([key, subSchema]) => {
       if (json.hasOwnProperty(key) && json[key] != undefined) {
         m[key] = getType(subSchema).deserialize(json[key], context);
       }
     });
+    
     return m;
   }
+  
+  
 }
 
 Serializable.decorate = function (clazz, schema, options, factory) {

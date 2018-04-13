@@ -26,6 +26,7 @@ export default {
 		Object: Serializable
 	},
 	Entity,
+	Serializable,
 	deserialize,
 	serialize,
 	makeSerializable

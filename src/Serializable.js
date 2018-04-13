@@ -6,7 +6,7 @@ export default class Serializable {
     this.options = {};
     if (schema) { this.schema = schema;}
     if (factory) { this.factory = factory;}
-    if (options) { this.options; }
+    if (options) { this.options = options; }
     
   }
 
@@ -66,13 +66,13 @@ export default class Serializable {
   deserialize(json, context) {
     if (!json) { return; }
     json = this.beforeDeserialize(json, context);
-    const m = this.factory(context, json);
+    let m = this.factory(context, json);
     Object.entries(this.schema).forEach(([key, subSchema]) => {
       if (json.hasOwnProperty(key)) {
         m[key] = getType(subSchema).deserialize(json[key], context);
       }
     });
-    
+    m = this.afterDeserialize(m, context);
     return m;
   }
   

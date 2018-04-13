@@ -2,6 +2,34 @@ const assert = require('assert');
 const raisinBran = require('..');
 import test from 'ava';
 
+test('before serialize should work', t => {
+	class User {};
+	raisinBran.Serializable.decorateLazy(User, () => ({
+		schema: {
+			foo: String
+		},
+		options: {
+			beforeSerialize(json) {
+				return {
+					foo: json.bar
+				}
+			},
+			afterDeserialize(json) {
+				return {
+					bar: json.foo
+				}
+			}
+		}
+	}));
+	
+	const j = new User();
+	j.bar = 'hey';
+	t.deepEqual({ foo: 'hey' }, raisinBran.serialize(j));
+	const deserialized = raisinBran.deserialize({foo: 'hey'}, User);
+	t.is(deserialized.bar, 'hey');
+	
+})
+
 test('should serealize primitive', t => {
 	t.is(false, raisinBran.serialize(false, Boolean));
 	t.is(true, raisinBran.serialize(true, Boolean));

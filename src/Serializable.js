@@ -3,9 +3,11 @@ import makeSerializable from './makeSerializable';
 import makeSerializableLazy from './makeSerializableLazy';
 export default class Serializable {
   constructor(schema, options, factory) {
+    this.options = {};
     if (schema) { this.schema = schema;}
     if (factory) { this.factory = factory;}
     if (options) { this.options; }
+    
   }
 
   define(schema, factory, options) {

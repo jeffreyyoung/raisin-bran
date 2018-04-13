@@ -23,7 +23,7 @@ export default class Serializable {
     if (!value) { return;}
     let json = {};
     Object.entries(this.schema).forEach(([key, subSchema]) => {
-      if (value.hasOwnProperty(key)) {
+      if (value.hasOwnProperty(key) && json[key] != undefined) {
         json[key] = getType(subSchema).serialize(value[key], context);
       }
     });
@@ -34,7 +34,7 @@ export default class Serializable {
     if (!json) { return; }
     const m = this.factory(context, json);
     Object.entries(this.schema).forEach(([key, subSchema]) => {
-      if (json.hasOwnProperty(key)) {
+      if (json.hasOwnProperty(key) && json[key] != undefined) {
         m[key] = getType(subSchema).deserialize(json[key], context);
       }
     });

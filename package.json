@@ -1,6 +1,6 @@
 {
   "name": "raisin-bran",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/raisin-bran.cjs.js",
   "module": "dist/raisin-bran.esm.js",
   "browser": "dist/raisin-bran.umd.js",

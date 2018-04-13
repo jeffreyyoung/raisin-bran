@@ -1,10 +1,11 @@
 export default (type) => {
   return {
     serialize(value, context) {
-      if (!Array.isArray(value)) {
-        return;
-      } else {
+      //duck type check the value incase of mobx or some other observable array
+      if (value && value.map) {
         return value.map(v => type.serialize(v, context));
+      } else {
+        return;
       }
     },
     deserialize(json, context) {
